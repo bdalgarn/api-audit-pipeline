@@ -1,0 +1,17 @@
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  synth-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::088079785737:role/GitHubActionsDeployRole
+          aws-region: us-east-1
+
+      - run: npm ci && npm run build
+      - run: npx cdk deploy --require-approval never
